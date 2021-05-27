@@ -1,5 +1,8 @@
 const APP_NAV = [
   { title: 'Home', key: 'home' },
+  { title: 'Customers', key: 'customers'},
+  { title: 'Forms', key: 'forms' },
+  { title: 'Data Columns', key: 'data-columns' },
   { title: 'Products', key: 'products' },
   { title: 'Metafields', key: 'metafields' },
 ]

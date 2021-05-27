@@ -58,19 +58,21 @@ app.use(async (ctx, next) => {
 })
 app.use((ctx, next) => {
   ctx.set('Access-Control-Allow-Credentials', 'true');
-  ctx.set('Access-Control-Allow-Origin', process.env.SHOPIFY_APP_HOST);
+  // ctx.set('Access-Control-Allow-Origin', process.env.SHOPIFY_APP_HOST);
+  ctx.set('Access-Control-Allow-Origin', '*');
   ctx.set('Access-Control-Allow-Headers', '*');
+  ctx.set('Access-Control-Allow-Methods', '*');
   return next();
 })
 
-app.use(devMiddleware(compile))
+// command when run npm run server_dev
+// app.use(devMiddleware(compile));
 
 app.use(router.routes())
 app.use(router.allowedMethods())
 
 router.get('/', async (ctx) => {
   const { shop } = ctx.query
-
   await ctx.render('pages/index', {
     page_title: 'Arena Starter App',
     api_key: SHOPIFY_APP_KEY,
@@ -89,6 +91,21 @@ router.use('/webhooks', WebhookRoutes.routes(), WebhookRoutes.allowedMethods())
 
 // Auth type request handles
 router.use('/auth', AuthRoutes.routes(), AuthRoutes.allowedMethods())
+
+router.get(
+  /\/((home)|customers|forms|data-columns|products|support|privacy|app-managed|country-redirect|price-list)$/,
+  // checkToken,
+  async (ctx) => {
+    console.log("11111111111111");
+    const { shop } = ctx.query
+    await ctx.render('pages/index', {
+      page_title: 'Arena Starter App',
+      api_key: process.env.SHOPIFY_APP_KEY,
+      shop: shop,
+    })
+  },
+)
+
 
 const PORT = process.env.PORT || 5005
 app.listen(PORT);

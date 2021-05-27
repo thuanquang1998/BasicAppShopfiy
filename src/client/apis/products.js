@@ -1,10 +1,14 @@
 // @flow
 import apiCaller from '../utils/apiCaller';
 
-const find = async ({ limit, pageInfo, search }): Object => {
-  return await apiCaller(
-    `/admin/products?${limit ? `&limit=${limit}` : ''}${pageInfo ? `&pageInfo=${pageInfo}` : ''}${ search ? `&search=${search}` : ''}`,
-  );
+const find = async ({ limit, pageInfo, search, status, vendor }): Object => {
+  let _limit = limit ? `&limit=${limit}` : '';
+  let _pageInfo = pageInfo ? `&pageInfo=${pageInfo}` : '';
+  let _search = search ? `&search=${search}` : '';
+  let _status = status ? `&status=${status}` : '';
+  let _vendor = vendor ? `&vendor=${vendor}` : '';
+
+  return await apiCaller(`/admin/products?${_limit}${_pageInfo}${_search}${_status}${_vendor}`)
 };
 
 const findById = async (id: number): Object => {

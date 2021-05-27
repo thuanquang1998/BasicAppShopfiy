@@ -3,10 +3,12 @@ const AdminApi = new Router()
 const bodyParser = require('koa-bodyparser')
 const asyncBusboy = require('async-busboy')
 
+
 const AppStatus = require('../middlewares/app-status')
 const verifyToken = require('./verify-token')
 const { StoreSettingsMiddleware } = require('../middlewares/store_settings')
 const { ProductsMiddleware } = require('../middlewares/products')
+const { ProductsGraphqlMiddleware } = require('../middlewares/products-graphql')
 
 const { Pool } = require('pg');
 const {
@@ -59,6 +61,7 @@ AdminApi.use(getAppToken)
  * STORE SETTINGS
  */
 AdminApi.get('/store-settings', async (ctx) => {
+  console.log("store-settings");
   const { shop, accessToken } = ctx.state
   ctx.body = await StoreSettingsMiddleware.find({ shop, accessToken })
 })
@@ -78,8 +81,8 @@ AdminApi.put('/store-settings', bodyParser(), async (ctx) => {
  */
 AdminApi.get('/products', async (ctx) => {
   const { shop, accessToken } = ctx.state
-  const { limit, pageInfo, search } = ctx.request.query
-  ctx.body = await ProductsMiddleware.find({ shop, accessToken, limit, pageInfo, search })
+  const { limit, pageInfo, search, status, vendor } = ctx.request.query
+  ctx.body = await ProductsMiddleware.find({ shop, accessToken, limit, pageInfo, search, status, vendor })
 })
 
 AdminApi.get('/products/:id', async (ctx) => {
@@ -109,6 +112,58 @@ AdminApi.delete('/products', bodyParser(), async (ctx) => {
   const { shop, accessToken } = ctx.state
   const { id } = ctx.request.body
   ctx.body = await ProductsMiddleware.delete({ shop, accessToken, id })
+})
+/**
+ * ================================================
+ */
+
+/**
+ * ================================================
+ * PRODUCTS
+ */
+AdminApi.get('/graphql-products', async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { id, limit, nextPageInfo, previousPageInfo, search, vendor, status } = ctx.request.query
+  ctx.body = await ProductsGraphqlMiddleware.find({ 
+    shop, 
+    accessToken, 
+    id, 
+    limit, 
+    nextPageInfo, 
+    previousPageInfo, 
+    search, 
+    vendor,
+    status
+  })
+})
+AdminApi.post('/graphql-products', bodyParser(), async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { data } = ctx.request.body
+  ctx.body = await ProductsGraphqlMiddleware.create({ shop, accessToken, data })
+})
+AdminApi.put('/graphql-products', bodyParser(), async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { data } = ctx.request.body
+  ctx.body = await ProductsGraphqlMiddleware.update({ shop, accessToken, data })
+})
+AdminApi.delete('/graphql-products', bodyParser(), async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { id } = ctx.request.body
+  ctx.body = await ProductsGraphqlMiddleware.delete({ shop, accessToken, id })
+})
+AdminApi.get('/graphql-products-bulk', async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  ctx.body = await ProductsGraphqlMiddleware.getAllProducts({shop, accessToken})
+})
+AdminApi.post('/graphql-products-bulk', bodyParser(), async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { id } = ctx.request.body
+  ctx.body = await ProductsGraphqlMiddleware.pollGetAllProducts({ shop, accessToken, id })
+})
+AdminApi.post('/graphql-products-getAll', bodyParser(), async (ctx) => {
+  const { shop, accessToken } = ctx.state
+  const { url } = ctx.request.body
+  ctx.body = await ProductsGraphqlMiddleware.getAllData({ shop, accessToken, url })
 })
 /**
  * ================================================

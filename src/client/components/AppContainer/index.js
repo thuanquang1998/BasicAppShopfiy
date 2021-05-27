@@ -12,6 +12,7 @@ const mapStateToProps = (state: State) => {
     store_setting: state.store_setting,
     app_nav: state.app_nav,
     metafields: state.metafields,
+    products: state.products,
   }
 }
 

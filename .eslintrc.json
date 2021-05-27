@@ -1,13 +1,76 @@
+// {
+//   "parser": "babel-eslint",
+//   "extends": ["airbnb"],
+//   "env": {
+//     "browser": true,
+//     "node": true
+//   },
+//   "rules": {
+//     "no-console": "off",
+//     "comma-dangle": "off",
+//     "react/jsx-filename-extension": "off"
+//   }
+// }
 {
-  "parser": "babel-eslint",
-  "extends": ["airbnb"],
-  "env": {
-    "browser": true,
-    "node": true
-  },
+  "plugins": [
+      "react"
+  ],
+  "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+  ],
   "rules": {
-    "no-console": "off",
-    "comma-dangle": "off",
-    "react/jsx-filename-extension": "off"
+      "indent": [
+          2,
+          2,
+          {
+              "SwitchCase": 1
+          }
+      ],
+      "linebreak-style": [
+          2,
+          "unix"
+      ],
+      "quotes": [
+          2,
+          "single"
+      ],
+      "semi": [
+        "semi": "error"
+      ],
+      "curly": [
+          2,
+          "all"
+      ],
+      "camelcase": [
+          2,
+          {
+              "properties": "always"
+          }
+      ],
+      "eqeqeq": [
+          2,
+          "smart"
+      ],
+      "one-var-declaration-per-line": [
+          2,
+          "always"
+      ],
+      "new-cap": 2,
+      "no-case-declarations": 0
+  },
+  "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+          "jsx": true
+      }
+  },
+  "env": {
+      "browser": true,
+      "es6": true
+  },
+  "globals": {
+      "arguments": true
   }
 }

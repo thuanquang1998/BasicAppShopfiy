@@ -4,7 +4,7 @@ const { ResponseHandler } = require('../utils/responseHandler')
 const API_VERSION = '2021-01'
 const LIMIT_PER_REQUEST = 250
 
-const find = async ({ shop, accessToken, limit, pageInfo, search }) => {
+const find = async ({ shop, accessToken, limit, pageInfo, search, status, vendor}) => {
   try {
     // default params
     let _limit = parseInt(limit)
@@ -16,7 +16,7 @@ const find = async ({ shop, accessToken, limit, pageInfo, search }) => {
     let res = await apiCaller({
       shop,
       accessToken,
-      endpoint: `/admin/api/${API_VERSION}/products.json?limit=${_limit}${pageInfo ? `&page_info=${pageInfo}` : ``}${search ? `&title=${search}` : ``}`,
+      endpoint: `/admin/api/${API_VERSION}/products.json?limit=${_limit}${pageInfo ? `&page_info=${pageInfo}` : ``}${search ? `&title=${search}` : ``}${status ? `&status=${status.toLowerCase()}` : ``}${vendor ? `&vendor=${vendor}` : ``}`,
       method: 'GET',
       pageInfo: true,
     })
@@ -171,3 +171,4 @@ module.exports.ProductsMiddleware = {
   update,
   delete: _delete,
 }
+

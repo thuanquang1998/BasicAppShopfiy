@@ -6,15 +6,17 @@ const apiCaller = async (endpoint: string, method?: string = 'GET', data?: Objec
   try {
     let token = await getSessionToken(window.app)
 
-    let res = await axios({
-      url: endpoint,
+    let apiObj = {
+      url: window.SHOPIFY_APP_HOST + endpoint,
       method,
       data,
       headers: {
         ...headers,
         Authorization: `Bearer ${token}`,
-      },
-    })
+      }, 
+    }
+
+    let res = await axios(apiObj)
 
     if (!res.data?.success && res.data?.error?.message === 'INVALID_SHOP_SESSION') {
       console.log(`INVALID SHOP SESSION`)
@@ -23,15 +25,7 @@ const apiCaller = async (endpoint: string, method?: string = 'GET', data?: Objec
       return await new Promise((resolve, reject) => {
         setTimeout(async () => {
           token = await getSessionToken(window.app)
-          res = await axios({
-            url: endpoint,
-            method,
-            data,
-            headers: {
-              ...headers,
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          res = await axios(apiObj)
 
           resolve(res.data)
         }, 1000)
